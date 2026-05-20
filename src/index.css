@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+body {
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #FFF7ED 0%, #FFF1E6 100%);
+  min-height: 100vh;
+}
+
+.pet {
+  -webkit-transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  will-change: transform, opacity;
+}
+
+.pet-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.pet-blink {
+  animation: blink 4s ease-in-out infinite;
+}
+
+.pet-bounce {
+  animation: bounce 0.5s ease-out;
+}
+
+.pet-shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+.pet-eat {
+  animation: eat 0.3s ease-out;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes blink {
+  0%, 90%, 100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes eat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet,
+  .pet-float,
+  .pet-blink,
+  .pet-bounce,
+  .pet-shake,
+  .pet-eat {
+    animation: none;
+    transition: none;
+  }
+}
