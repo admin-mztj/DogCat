@@ -1,13 +1,14 @@
 import { usePet } from '../../context/PetContext';
 import { PET_CONFIGS } from '../../data/products';
 import { getStatusColor } from '../../utils/helpers';
-import { Coins } from 'lucide-react';
+import { Coins, Settings } from 'lucide-react';
 
 interface StatusBarProps {
   className?: string;
+  onSettingsClick?: () => void;
 }
 
-export const StatusBar = ({ className = '' }: StatusBarProps) => {
+export const StatusBar = ({ className = '', onSettingsClick }: StatusBarProps) => {
   const { state } = usePet();
   const petConfig = PET_CONFIGS[state.pet.type];
 
@@ -21,9 +22,19 @@ export const StatusBar = ({ className = '' }: StatusBarProps) => {
               {petConfig.name}
             </span>
           </div>
-          <div className="flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full">
-            <Coins className="w-5 h-5 text-yellow-600" />
-            <span className="font-bold text-yellow-700">{state.pet.coins}</span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full">
+              <Coins className="w-5 h-5 text-yellow-600" />
+              <span className="font-bold text-yellow-700">{state.pet.coins}</span>
+            </div>
+            {onSettingsClick && (
+              <button
+                onClick={onSettingsClick}
+                className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+              >
+                <Settings className="w-5 h-5 text-gray-600" />
+              </button>
+            )}
           </div>
         </div>
         
