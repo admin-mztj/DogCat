@@ -1,18 +1,22 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { usePet } from '../../context/PetContext';
 import { useDraggable } from '../../hooks/useDraggable';
 import { PET_CONFIGS } from '../../data/products';
 import { getPetEmotion, getStatusColor } from '../../utils/helpers';
+import type { SceneId } from '../../utils/sceneDetector';
 
 interface PetProps {
   onInteraction?: () => void;
 }
 
 export const Pet = ({ onInteraction }: PetProps) => {
-  const { state, updatePosition } = usePet();
-  const [isBlinking, setIsBlinking] = useState(false);
+  const { state, updatePosition, setState, playWithPet, addCoins } = usePet();
+  const [, setIsBlinking] = useState(false);
   const [isBouncing, setIsBouncing] = useState(false);
-  
+  const [currentAction, setCurrentAction] = useState<string | null>(null);
+  const [actionText, setActionText] = useState('');
+  const petRef = useRef<HTMLDivElement>(null);
+
   const {
     isDragging,
     position,
@@ -30,34 +34,143 @@ export const Pet = ({ onInteraction }: PetProps) => {
   }, [position, updatePosition]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const blinkInterval = setInterval(() => {
       if (Math.random() > 0.7 && !isDragging) {
         setIsBlinking(true);
         setTimeout(() => setIsBlinking(false), 200);
       }
     }, 3000);
-    return () => clearInterval(interval);
+    return () => clearInterval(blinkInterval);
   }, [isDragging]);
+
+  const performSceneAction = useCallback((sceneId: SceneId) => {
+    const actions: Record<SceneId, { text: string; action: () => void }> = {
+      home: {
+        text: '💤 睡觉中...',
+        action: () => {
+          setState(prev => ({
+            ...prev,
+            pet: {
+              ...prev.pet,
+              mood: Math.min(100, prev.pet.mood + 15),
+              hunger: Math.max(0, prev.pet.hunger - 5)
+            }
+          }));
+        }
+      },
+      shop: {
+        text: '💰 打工赚钱中...',
+        action: () => {
+          addCoins(20);
+          setState(prev => ({
+            ...prev,
+            pet: {
+              ...prev.pet,
+              mood: Math.max(0, prev.pet.mood - 10),
+              hunger: Math.max(0, prev.pet.hunger - 10)
+            }
+          }));
+        }
+      },
+      school: {
+        text: '📚 学习中...',
+        action: () => {
+          setState(prev => ({
+            ...prev,
+            pet: {
+              ...prev.pet,
+              mood: Math.max(0, prev.pet.mood - 5),
+              hunger: Math.max(0, prev.pet.hunger - 8)
+            }
+          }));
+        }
+      },
+      basketball: {
+        text: '🏀 打篮球中...',
+        action: () => {
+          playWithPet();
+          playWithPet();
+          setState(prev => ({
+            ...prev,
+            pet: {
+              ...prev.pet,
+              hunger: Math.max(0, prev.pet.hunger - 15)
+            }
+          }));
+        }
+      }
+    };
+
+    const action = actions[sceneId];
+    if (action) {
+      setCurrentAction(sceneId);
+      setActionText(action.text);
+      action.action();
+    }
+  }, [setState, addCoins, playWithPet]);
+
+  useEffect(() => {
+    if (!currentAction || isDragging) return;
+
+    const sceneActionInterval = setInterval(() => {
+      performSceneAction(currentAction as SceneId);
+    }, 3000);
+
+    return () => clearInterval(sceneActionInterval);
+  }, [currentAction, isDragging, performSceneAction]);
 
   const handleRelease = useCallback(() => {
     if (!wasDragging()) {
       setIsBouncing(true);
       setTimeout(() => setIsBouncing(false), 500);
       onInteraction?.();
+    } else {
+      const statusBarHeight = 100;
+      const padding = 8;
+      const gap = 8;
+      const sceneWidth = (window.innerWidth - padding * 2 - gap) / 2;
+      const sceneHeight = (window.innerHeight - statusBarHeight - 140) / 2;
+      
+      const sceneBounds = [
+        { id: 'home', x: padding, y: statusBarHeight, width: sceneWidth, height: sceneHeight },
+        { id: 'shop', x: padding + sceneWidth + gap, y: statusBarHeight, width: sceneWidth, height: sceneHeight },
+        { id: 'school', x: padding, y: statusBarHeight + sceneHeight + gap, width: sceneWidth, height: sceneHeight },
+        { id: 'basketball', x: padding + sceneWidth + gap, y: statusBarHeight + sceneHeight + gap, width: sceneWidth, height: sceneHeight }
+      ] as { id: SceneId; x: number; y: number; width: number; height: number }[];
+      
+      const petCenter = {
+        x: position.x + 80,
+        y: position.y + 60
+      };
+      
+      const detectedScene = sceneBounds.find(scene => 
+        petCenter.x >= scene.x &&
+        petCenter.x <= scene.x + scene.width &&
+        petCenter.y >= scene.y &&
+        petCenter.y <= scene.y + scene.height
+      )?.id;
+      
+      if (detectedScene) {
+        performSceneAction(detectedScene);
+      } else {
+        setCurrentAction(null);
+        setActionText('');
+      }
     }
-  }, [onInteraction, wasDragging]);
+  }, [onInteraction, wasDragging, position, performSceneAction]);
 
   const petConfig = PET_CONFIGS[state.pet.type];
   const emotion = getPetEmotion(state.pet.hunger, state.pet.mood);
   const isHungry = state.pet.hunger < 30;
   
   let petClass = 'pet';
-  if (!isDragging) petClass += ' pet-float';
+  if (!isDragging && !currentAction) petClass += ' pet-float';
   if (isBouncing) petClass += ' pet-bounce';
   if (isHungry && !isDragging) petClass += ' pet-shake';
 
   return (
     <div
+      ref={petRef}
       className={`${petClass} fixed cursor-move z-50 select-none`}
       style={{
         left: position.x,
@@ -106,28 +219,28 @@ export const Pet = ({ onInteraction }: PetProps) => {
             </div>
           </div>
         </div>
-        
-        <div className="relative flex items-center justify-center" style={{ width: 140, height: 140 }}>
-          <div className="absolute bottom-0 w-20 h-5 bg-black/10 rounded-full blur-sm" />
-          <div 
-            className={`relative transition-transform ${isBlinking ? 'scale-y-10' : ''}`}
-            style={{ transformOrigin: 'center bottom' }}
-          >
-            {petConfig.imageUrl ? (
-              <img 
-                src={petConfig.imageUrl} 
-                alt={petConfig.name}
-                className="w-28 h-28 object-contain"
-                style={{ filter: isBlinking ? 'brightness(0.3)' : 'none', transition: 'filter 0.1s' }}
-              />
-            ) : (
-              <span className="text-7xl">{petConfig.emoji}</span>
-            )}
-          </div>
-          <div className="absolute -top-2 text-xl animate-pulse">
-            {emotion}
-          </div>
+
+        <div className="relative">
+          {petConfig.imageUrl ? (
+            <img
+              src={petConfig.imageUrl}
+              alt={petConfig.name}
+              className={`w-28 h-28 object-contain transition-transform duration-300 ${isDragging ? 'scale-110' : 'scale-100'}`}
+            />
+          ) : (
+            <span className={`text-7xl transition-transform duration-300 ${isDragging ? 'scale-110' : 'scale-100'}`}>
+              {emotion}
+            </span>
+          )}
+          
+          {currentAction && (
+            <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-3 py-1 rounded-full whitespace-nowrap animate-pulse">
+              {actionText}
+            </div>
+          )}
         </div>
+        
+        <div className="w-20 h-5 bg-gray-300/50 rounded-full mt-2 blur-sm" />
       </div>
     </div>
   );

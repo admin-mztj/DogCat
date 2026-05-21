@@ -3,12 +3,16 @@ import { PET_CONFIGS } from '../../data/products';
 import { getStatusColor } from '../../utils/helpers';
 import { Coins } from 'lucide-react';
 
-export const StatusBar = () => {
+interface StatusBarProps {
+  className?: string;
+}
+
+export const StatusBar = ({ className = '' }: StatusBarProps) => {
   const { state } = usePet();
   const petConfig = PET_CONFIGS[state.pet.type];
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md shadow-lg">
+    <div className={`fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md shadow-lg ${className}`}>
       <div className="max-w-lg mx-auto px-4 py-3">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">

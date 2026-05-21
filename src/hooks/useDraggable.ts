@@ -6,8 +6,8 @@ interface DraggableState {
   position: { x: number; y: number };
 }
 
-const PET_WIDTH = 100;
-const PET_HEIGHT = 100;
+const PET_WIDTH = 160;
+const PET_HEIGHT = 200;
 const STATUS_BAR_HEIGHT = 60;
 const ACTION_BAR_HEIGHT = 80;
 const CLICK_THRESHOLD = 5;

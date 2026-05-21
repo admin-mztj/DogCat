@@ -9,7 +9,7 @@ interface ActionBarProps {
 
 export const ActionBar = ({ onFeed, onPlay, onShop, onBackpack }: ActionBarProps) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md shadow-[0_-4px_20px_rgba(0,0,0,0.1)] safe-area-bottom">
       <div className="max-w-lg mx-auto px-4 py-3">
         <div className="flex justify-around gap-2">
           <ActionButton
