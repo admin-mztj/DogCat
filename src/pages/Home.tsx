@@ -5,14 +5,14 @@ import { ActionBar } from '../components/ActionBar';
 import { FeedModal } from '../components/FeedModal';
 import { BackpackModal } from '../components/BackpackModal';
 import { PetSelect } from '../components/PetSelect';
-import { usePetState } from '../hooks/usePetState';
+import { usePet } from '../context/PetContext';
 import { Settings } from 'lucide-react';
 
 export const Home = ({ onGoToShop }: { onGoToShop: () => void }) => {
   const [isFeedModalOpen, setIsFeedModalOpen] = useState(false);
   const [isBackpackModalOpen, setIsBackpackModalOpen] = useState(false);
   const [isPetSelectOpen, setIsPetSelectOpen] = useState(false);
-  const { playWithPet } = usePetState();
+  const { playWithPet } = usePet();
 
   return (
     <div className="min-h-screen pt-24 pb-28">

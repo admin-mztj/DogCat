@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { usePetState } from '../hooks/usePetState';
+import { usePet } from '../context/PetContext';
 import { PRODUCTS } from '../data/products';
 import { ArrowLeft, Coins } from 'lucide-react';
 
@@ -11,7 +11,7 @@ type Category = 'all' | 'food' | 'toy';
 
 export const Shop = ({ onBack }: ShopProps) => {
   const [selectedCategory, setSelectedCategory] = useState<Category>('all');
-  const { state, purchaseProduct } = usePetState();
+  const { state, purchaseProduct } = usePet();
 
   const filteredProducts = PRODUCTS.filter(p => {
     const categoryMatch = selectedCategory === 'all' || p.category === selectedCategory;

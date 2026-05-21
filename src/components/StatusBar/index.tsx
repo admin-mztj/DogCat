@@ -1,10 +1,10 @@
-import { usePetState } from '../../hooks/usePetState';
+import { usePet } from '../../context/PetContext';
 import { PET_CONFIGS } from '../../data/products';
 import { getStatusColor } from '../../utils/helpers';
 import { Coins } from 'lucide-react';
 
 export const StatusBar = () => {
-  const { state } = usePetState();
+  const { state } = usePet();
   const petConfig = PET_CONFIGS[state.pet.type];
 
   return (

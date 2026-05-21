@@ -1,5 +1,5 @@
 import { PetType } from '../../types';
-import { usePetState } from '../../hooks/usePetState';
+import { usePet } from '../../context/PetContext';
 import { PET_CONFIGS } from '../../data/products';
 
 interface PetSelectProps {
@@ -8,7 +8,7 @@ interface PetSelectProps {
 }
 
 export const PetSelect = ({ isOpen, onClose }: PetSelectProps) => {
-  const { state, switchPet } = usePetState();
+  const { state, switchPet } = usePet();
 
   if (!isOpen) return null;
 

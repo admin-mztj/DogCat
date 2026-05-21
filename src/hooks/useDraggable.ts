@@ -17,6 +17,13 @@ export function useDraggable(initialPosition: { x: number; y: number }) {
     position: initialPosition
   });
 
+  useEffect(() => {
+    setState(prev => ({
+      ...prev,
+      position: initialPosition
+    }));
+  }, [initialPosition]);
+
   const offset = useRef({ x: 0, y: 0 });
 
   const getValidPosition = useCallback((x: number, y: number) => {

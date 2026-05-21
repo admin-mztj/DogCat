@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { usePetState } from '../../hooks/usePetState';
+import { usePet } from '../../context/PetContext';
 import { PRODUCTS } from '../../data/products';
 
 interface BackpackModalProps {
@@ -8,7 +8,7 @@ interface BackpackModalProps {
 }
 
 export const BackpackModal = ({ isOpen, onClose }: BackpackModalProps) => {
-  const { state } = usePetState();
+  const { state } = usePet();
   
   const items = state.backpack.map(item => {
     const product = PRODUCTS.find(p => p.id === item.productId);

@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import { usePetState } from '../../hooks/usePetState';
+import { usePet } from '../../context/PetContext';
 import { PRODUCTS } from '../../data/products';
 
 interface FeedModalProps {
@@ -8,7 +8,7 @@ interface FeedModalProps {
 }
 
 export const FeedModal = ({ isOpen, onClose }: FeedModalProps) => {
-  const { state, feedPet } = usePetState();
+  const { state, feedPet } = usePet();
   
   const foodItems = state.backpack.map(item => {
     const product = PRODUCTS.find(p => p.id === item.productId);

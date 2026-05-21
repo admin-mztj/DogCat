@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { usePetState } from '../../hooks/usePetState';
+import { usePet } from '../../context/PetContext';
 import { useDraggable } from '../../hooks/useDraggable';
 import { PET_CONFIGS } from '../../data/products';
 import { getPetEmotion, getStatusColor } from '../../utils/helpers';
@@ -9,7 +9,7 @@ interface PetProps {
 }
 
 export const Pet = ({ onInteraction }: PetProps) => {
-  const { state, updatePosition } = usePetState();
+  const { state, updatePosition } = usePet();
   const [isBlinking, setIsBlinking] = useState(false);
   const [isBouncing, setIsBouncing] = useState(false);
   
