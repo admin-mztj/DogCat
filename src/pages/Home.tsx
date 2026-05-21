@@ -5,6 +5,7 @@ import { ActionBar } from '../components/ActionBar';
 import { FeedModal } from '../components/FeedModal';
 import { BackpackModal } from '../components/BackpackModal';
 import { PetSelect } from '../components/PetSelect';
+import { PlayModal } from '../components/PlayModal';
 import { usePet } from '../context/PetContext';
 import { Settings } from 'lucide-react';
 
@@ -12,6 +13,7 @@ export const Home = ({ onGoToShop }: { onGoToShop: () => void }) => {
   const [isFeedModalOpen, setIsFeedModalOpen] = useState(false);
   const [isBackpackModalOpen, setIsBackpackModalOpen] = useState(false);
   const [isPetSelectOpen, setIsPetSelectOpen] = useState(false);
+  const [isPlayModalOpen, setIsPlayModalOpen] = useState(false);
   const { playWithPet } = usePet();
 
   return (
@@ -29,7 +31,7 @@ export const Home = ({ onGoToShop }: { onGoToShop: () => void }) => {
       <Pet onInteraction={playWithPet} />
       <ActionBar
         onFeed={() => setIsFeedModalOpen(true)}
-        onPlay={playWithPet}
+        onPlay={() => setIsPlayModalOpen(true)}
         onShop={onGoToShop}
         onBackpack={() => setIsBackpackModalOpen(true)}
       />
@@ -45,6 +47,10 @@ export const Home = ({ onGoToShop }: { onGoToShop: () => void }) => {
       <PetSelect
         isOpen={isPetSelectOpen}
         onClose={() => setIsPetSelectOpen(false)}
+      />
+      <PlayModal
+        isOpen={isPlayModalOpen}
+        onClose={() => setIsPlayModalOpen(false)}
       />
     </div>
   );

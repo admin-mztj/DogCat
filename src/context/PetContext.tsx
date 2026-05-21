@@ -9,11 +9,13 @@ const MOOD_RECOVER_RATE = 0.1;
 
 interface PetContextType {
   state: GameState;
+  setState: React.Dispatch<React.SetStateAction<GameState>>;
   switchPet: (type: PetType) => void;
   feedPet: (productId: string) => void;
   playWithPet: () => void;
   purchaseProduct: (productId: string) => void;
   updatePosition: (x: number, y: number) => void;
+  addCoins: (amount: number) => void;
 }
 
 const PetContext = createContext<PetContextType | undefined>(undefined);
@@ -155,14 +157,26 @@ export function PetProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const addCoins = useCallback((amount: number) => {
+    setState(prev => ({
+      ...prev,
+      pet: {
+        ...prev.pet,
+        coins: prev.pet.coins + amount
+      }
+    }));
+  }, []);
+
   return (
     <PetContext.Provider value={{
       state,
+      setState,
       switchPet,
       feedPet,
       playWithPet,
       purchaseProduct,
-      updatePosition
+      updatePosition,
+      addCoins
     }}>
       {children}
     </PetContext.Provider>

@@ -62,8 +62,8 @@ export const Pet = ({ onInteraction }: PetProps) => {
       style={{
         left: position.x,
         top: position.y + 40,
-        width: 120,
-        height: 140
+        width: 160,
+        height: 200
       }}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
@@ -107,8 +107,8 @@ export const Pet = ({ onInteraction }: PetProps) => {
           </div>
         </div>
         
-        <div className="relative flex items-center justify-center" style={{ width: 100, height: 100 }}>
-          <div className="absolute bottom-0 w-16 h-4 bg-black/10 rounded-full blur-sm" />
+        <div className="relative flex items-center justify-center" style={{ width: 140, height: 140 }}>
+          <div className="absolute bottom-0 w-20 h-5 bg-black/10 rounded-full blur-sm" />
           <div 
             className={`relative transition-transform ${isBlinking ? 'scale-y-10' : ''}`}
             style={{ transformOrigin: 'center bottom' }}
@@ -117,7 +117,7 @@ export const Pet = ({ onInteraction }: PetProps) => {
               <img 
                 src={petConfig.imageUrl} 
                 alt={petConfig.name}
-                className="w-20 h-20 object-contain"
+                className="w-28 h-28 object-contain"
                 style={{ filter: isBlinking ? 'brightness(0.3)' : 'none', transition: 'filter 0.1s' }}
               />
             ) : (

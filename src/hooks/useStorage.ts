@@ -38,7 +38,9 @@ function transformStoredData(data: StoredData): GameState {
     },
     backpack: data.backpack || [],
     lastFeedTime: data.lastUpdateTime || Date.now(),
-    lastPlayTime: data.lastUpdateTime || Date.now()
+    lastPlayTime: data.lastUpdateTime || Date.now(),
+    playCount: data.playCount || 0,
+    lastPlayDate: data.lastPlayDate || ''
   };
 }
 
@@ -50,6 +52,8 @@ function transformToStoredData(state: GameState): StoredData {
     coins: state.pet.coins,
     position: state.pet.position,
     backpack: state.backpack,
-    lastUpdateTime: Date.now()
+    lastUpdateTime: Date.now(),
+    playCount: state.playCount,
+    lastPlayDate: state.lastPlayDate
   };
 }

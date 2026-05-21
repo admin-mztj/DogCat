@@ -60,6 +60,8 @@ export function getInitialState(): GameState {
     },
     backpack: [],
     lastFeedTime: Date.now(),
-    lastPlayTime: Date.now()
+    lastPlayTime: Date.now(),
+    playCount: 0,
+    lastPlayDate: ''
   };
 }

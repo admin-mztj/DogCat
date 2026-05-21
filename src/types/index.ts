@@ -39,6 +39,8 @@ export interface GameState {
   backpack: BackpackItem[];
   lastFeedTime: number;
   lastPlayTime: number;
+  playCount: number;
+  lastPlayDate: string;
 }
 
 export interface StoredData {
@@ -49,4 +51,6 @@ export interface StoredData {
   position: { x: number; y: number };
   backpack: BackpackItem[];
   lastUpdateTime: number;
+  playCount: number;
+  lastPlayDate: string;
 }
