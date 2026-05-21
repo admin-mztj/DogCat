@@ -141,13 +141,18 @@ export function PetProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const updatePosition = useCallback((x: number, y: number) => {
-    setState(prev => ({
-      ...prev,
-      pet: {
-        ...prev.pet,
-        position: { x, y }
+    setState(prev => {
+      if (prev.pet.position.x === x && prev.pet.position.y === y) {
+        return prev;
       }
-    }));
+      return {
+        ...prev,
+        pet: {
+          ...prev.pet,
+          position: { x, y }
+        }
+      };
+    });
   }, []);
 
   return (

@@ -10,6 +10,7 @@ const PET_WIDTH = 100;
 const PET_HEIGHT = 100;
 const STATUS_BAR_HEIGHT = 60;
 const ACTION_BAR_HEIGHT = 80;
+const CLICK_THRESHOLD = 5;
 
 export function useDraggable(initialPosition: { x: number; y: number }) {
   const [state, setState] = useState<DraggableState>({
@@ -17,14 +18,21 @@ export function useDraggable(initialPosition: { x: number; y: number }) {
     position: initialPosition
   });
 
-  useEffect(() => {
-    setState(prev => ({
-      ...prev,
-      position: initialPosition
-    }));
-  }, [initialPosition]);
-
   const offset = useRef({ x: 0, y: 0 });
+  const startPos = useRef({ x: 0, y: 0 });
+  const hasMoved = useRef(false);
+
+  useEffect(() => {
+    setState(prev => {
+      if (prev.position.x === initialPosition.x && prev.position.y === initialPosition.y) {
+        return prev;
+      }
+      return {
+        ...prev,
+        position: initialPosition
+      };
+    });
+  }, [initialPosition]);
 
   const getValidPosition = useCallback((x: number, y: number) => {
     const maxX = window.innerWidth - PET_WIDTH;
@@ -41,11 +49,19 @@ export function useDraggable(initialPosition: { x: number; y: number }) {
       x: clientX - state.position.x,
       y: clientY - state.position.y
     };
+    startPos.current = { x: clientX, y: clientY };
+    hasMoved.current = false;
     setState(prev => ({ ...prev, isDragging: true }));
   }, [state.position]);
 
   const handleMove = useCallback((clientX: number, clientY: number) => {
     if (!state.isDragging) return;
+    
+    const dx = Math.abs(clientX - startPos.current.x);
+    const dy = Math.abs(clientY - startPos.current.y);
+    if (dx > CLICK_THRESHOLD || dy > CLICK_THRESHOLD) {
+      hasMoved.current = true;
+    }
     
     const newX = clientX - offset.current.x;
     const newY = clientY - offset.current.y;
@@ -73,6 +89,7 @@ export function useDraggable(initialPosition: { x: number; y: number }) {
   }, [handleMove]);
 
   const onMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
     handleStart(e.clientX, e.clientY);
   }, [handleStart]);
 
@@ -83,6 +100,12 @@ export function useDraggable(initialPosition: { x: number; y: number }) {
   const onMouseUp = useCallback(() => {
     handleEnd();
   }, [handleEnd]);
+
+  const onMouseLeave = useCallback(() => {
+    if (state.isDragging) {
+      handleEnd();
+    }
+  }, [state.isDragging, handleEnd]);
 
   useEffect(() => {
     if (state.isDragging) {
@@ -101,6 +124,9 @@ export function useDraggable(initialPosition: { x: number; y: number }) {
     onTouchStart,
     onTouchMove,
     onTouchEnd: handleEnd,
-    onMouseDown
+    onMouseDown,
+    onMouseUp,
+    onMouseLeave,
+    wasDragging: () => hasMoved.current
   };
 }

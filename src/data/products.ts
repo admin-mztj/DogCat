@@ -3,15 +3,17 @@ import { Product } from '../types';
 export const PET_CONFIGS = {
   cat: {
     id: 'cat',
-    name: '小橘',
-    emoji: '🐱',
+    name: '六花',
+    emoji: '👧',
+    imageUrl: '/assets/liuhua.png',
     color: '#FFB347',
-    favoriteFood: '🐟'
+    favoriteFood: '🍰'
   },
   dog: {
     id: 'dog',
     name: '旺财',
     emoji: '🐕',
+    imageUrl: '',
     color: '#8B4513',
     favoriteFood: '🍖'
   }
@@ -29,8 +31,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'cat-food',
-    name: '猫粮',
-    emoji: '🍚',
+    name: '蛋糕',
+    emoji: '🍰',
     price: 20,
     category: 'food',
     effect: { hunger: 40 },
@@ -38,8 +40,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'cat-can',
-    name: '高级罐头',
-    emoji: '🥫',
+    name: '高级甜点',
+    emoji: '🧁',
     price: 50,
     category: 'food',
     effect: { hunger: 80 },
@@ -74,8 +76,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'feather',
-    name: '逗猫棒',
-    emoji: '🪶',
+    name: '魔法棒',
+    emoji: '✨',
     price: 30,
     category: 'toy',
     effect: { mood: 30 },
